@@ -15,18 +15,17 @@ SECRET_KEY_FILE = "static/data/secret_key.txt"
 def load_json(filename):
     """Load JSON data from file"""
     filepath = os.path.join('static/data', filename)
-    if not os.path.exists(filepath):
-        return {}
     with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
 def get_secret_key():
     """Get secret key from file"""
-    if os.path.exists(SECRET_KEY_FILE):
+    try:
         with open(SECRET_KEY_FILE, 'r') as f:
             return f.read().strip()
-    return None
+    except FileNotFoundError:
+        return None
 
 
 def require_api_keys(f):
@@ -57,16 +56,19 @@ def require_api_keys(f):
 
 @app.route('/')
 def index():
+    """Home page"""
     return render_template('index.html')
 
 
 @app.route('/contact')
 def contact():
+    """Contact page"""
     return render_template('contact.html')
 
 
 @app.route('/api/health')
 def api_health():
+    """API health check endpoint"""
     return jsonify({
         'status': 'healthy',
         'service': 'Netzone API',
@@ -81,6 +83,7 @@ def api_health():
 @app.route('/api/v2rays')
 @require_api_keys
 def api_v2rays():
+    """Get V2Ray configurations (protected endpoint)"""
     try:
         v2rays = load_json('free_v2rays.json')
         return jsonify({
@@ -97,6 +100,7 @@ def api_v2rays():
 
 @app.route('/api/apps')
 def api_apps():
+    """Get supported apps list"""
     try:
         apps = load_json('apps.json')
         return jsonify({
@@ -113,21 +117,25 @@ def api_apps():
 
 @app.route('/whatsapp')
 def whatsapp():
+    """Redirect to WhatsApp group"""
     return redirect("https://chat.whatsapp.com/Hre9DcY71UvC32oMVwwUrE", code=302)
-
 
 @app.route('/discord')
 def discord():
+    """Redirect to Discord server"""
     return redirect("https://discord.gg/DhPZ8uMv4v", code=302)
+
 
 
 @app.errorhandler(404)
 def page_not_found(e):
+    """404 error handler"""
     return render_template('404.html'), 404
 
 
 @app.errorhandler(500)
 def internal_error(e):
+    """500 error handler"""
     return render_template('404.html'), 500
 
 
