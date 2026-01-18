@@ -1,0 +1,46 @@
+{
+  "apps": [
+    {
+      "name": "Npv Tunnel V2ray/SSH",
+      "platform": "IOS",
+      "url": "https://play.google.com/store/apps/details?id=com.napsternetlabs.napsternetv",
+      "icon": "images/npv_tunnel.webp"
+    },
+    {
+      "name": "Netmod",
+      "platform": "Android",
+      "url": "https://netmod-vpn-client.en.uptodown.com/android",
+      "icon": "images/netmod.webp"
+    },
+    {
+      "name": "V2Box",
+      "platform": "Android",
+      "url": "https://play.google.com/store/apps/details?id=dev.hexasoftware.v2box",
+      "icon": "images/v2box.webp"
+    },
+    {
+      "name": "NekoBox",
+      "platform": "Android",
+      "url": "https://github.com/MatsuriDayo/NekoBoxForAndroid/releases",
+      "icon": "images/nekobox.jpg"
+    },
+    {
+      "name": "NetMod",
+      "platform": "Windows",
+      "url": "https://netmod-vpn-client.en.uptodown.com/windows",
+      "icon": "images/netmod.webp"
+    },
+    {
+      "name": "NekoRay",
+      "platform": "Windows",
+      "url": "https://github.com/Matsuridayo/nekoray/releases",
+      "icon": "images/nekoray.jpg"
+    },
+    {
+      "name": "Netch",
+      "platform": "Windows",
+      "url": "https://github.com/netchx/netch/releases",
+      "icon": "images/netch.png"
+    }
+  ]
+}
