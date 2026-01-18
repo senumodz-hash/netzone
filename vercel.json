@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "a529ceb9-5b3e-487b-ba53-d7930a437f70.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/a529ceb9-5b3e-487b-ba53-d7930a437f70.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/a529ceb9-5b3e-487b-ba53-d7930a437f70.py"
+    }
+  ]
+}
