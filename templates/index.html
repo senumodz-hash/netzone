@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Home - NetZone{% endblock %}
+
+{% block extra_css %}
+<style>
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin: 2rem;
+}
+.card {
+    background: var(--bg-card, #111);
+    color: var(--text-primary, #fff);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(33, 242, 255, 0.25);
+}
+.card img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+.card h3 {
+    margin-bottom: 0.5rem;
+}
+.card a {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    background: var(--accent, #21f2ff);
+    color: #000;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+.card a:hover {
+    background: #00a8b8;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align:center; margin-top:2rem;">Our Apps</h1>
+<div class="card-container" id="apps-container"></div>
+
+<h1 style="text-align:center; margin-top:4rem;">Free V2Ray Configurations</h1>
+<div class="card-container" id="v2ray-container"></div>
+
+<script>
+async function loadApps() {
+    const res = await fetch('/api/apps');
+    const data = await res.json();
+    const container = document.getElementById('apps-container');
+    data.data.apps.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <img src="/static/images/${app.icon.split('/').pop()}" alt="${app.name}">
+            <h3>${app.name}</h3>
+            <p>${app.platform}</p>
+            <a href="${app.url}" target="_blank">Download</a>
+        `;
+        container.appendChild(card);
+    });
+}
+
+async function loadV2Rays() {
+    const public_key = "NZ_PUB_7f9a2e8c4b6d1a5f3e0c9b7a4d2f8e1c";
+    const secret_key = "NZ_SEC_082cdb8785c84b229f694359d95b07d6";
+
+    const res = await fetch(`/api/v2rays?public_key=${public_key}&secret_key=${secret_key}`);
+    const data = await res.json();
+    const container = document.getElementById('v2ray-container');
+
+    data.data.vpn_configs.forEach(vpn => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <img src="/static/images/${vpn.icon.split('/').pop()}" alt="${vpn.name}">
+            <h3>${vpn.name}</h3>
+            <a href="${vpn.v2ray}" target="_blank">Copy Config</a>
+        `;
+        container.appendChild(card);
+    });
+}
+
+loadApps();
+loadV2Rays();
+</script>
+{% endblock %}
