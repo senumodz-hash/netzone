@@ -1,0 +1,898 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - NetZone{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Contact Hero Section */
+    .contact-hero {
+        position: relative;
+        min-height: 65vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--gradient-1);
+        padding: 3rem 1.5rem;
+    }
+
+    .contact-animated-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+        opacity: 0.5;
+    }
+
+    .contact-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        z-index: 1;
+    }
+
+    /* Animated grid and particles */
+    .grid-overlay {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image:
+            linear-gradient(rgba(33, 242, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(33, 242, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+
+    .pulse-circle {
+        position: absolute;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        opacity: 0;
+        animation: circlePulse 4s ease-out infinite;
+    }
+
+    @keyframes circlePulse {
+        0% {
+            transform: scale(0);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(3);
+            opacity: 0;
+        }
+    }
+
+    .wave-line {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        opacity: 0.2;
+        animation: waveMove 6s ease-in-out infinite;
+    }
+
+    @keyframes waveMove {
+        0%, 100% {
+            transform: translateX(-100%) translateY(0);
+        }
+        50% {
+            transform: translateX(100%) translateY(-20px);
+        }
+    }
+
+    .hero-content-wrapper {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        max-width: 750px;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    .hero-icon-badge {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 1.8rem;
+        background: rgba(33, 242, 255, 0.1);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: iconFloat 3s ease-in-out infinite;
+        box-shadow: 0 0 30px rgba(33, 242, 255, 0.3);
+    }
+
+    @keyframes iconFloat {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    .hero-icon-badge i {
+        font-size: 2.8rem;
+        color: var(--accent);
+    }
+
+    .contact-hero h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.2;
+    }
+
+    .contact-hero p {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        max-width: 650px;
+        margin: 0 auto;
+    }
+
+    /* Contact Container */
+    .contact-container {
+        max-width: 1200px;
+        margin: -4rem auto 0;
+        padding: 0 2rem 5rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+        gap: 2.5rem;
+        margin-bottom: 4rem;
+    }
+
+    .contact-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 2.8rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .contact-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-2);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s;
+    }
+
+    .contact-card::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(33, 242, 255, 0.1) 0%, transparent 70%);
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.4s;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent);
+        box-shadow: 0 20px 60px rgba(33, 242, 255, 0.25);
+    }
+
+    .contact-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .contact-card:hover::after {
+        opacity: 1;
+    }
+
+    .contact-icon-wrapper {
+        width: 75px;
+        height: 75px;
+        background: rgba(33, 242, 255, 0.1);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.8rem;
+        position: relative;
+        transition: all 0.3s;
+    }
+
+    .contact-icon-wrapper::after {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        background: var(--gradient-2);
+        border-radius: 16px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: -1;
+        filter: blur(10px);
+    }
+
+    .contact-card:hover .contact-icon-wrapper {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .contact-card:hover .contact-icon-wrapper::after {
+        opacity: 0.5;
+    }
+
+    .contact-icon {
+        font-size: 2.4rem;
+        color: var(--accent);
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-card h2 {
+        font-size: 1.75rem;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-card p {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.8;
+        font-size: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        width: 100%;
+    }
+
+    .contact-link::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .contact-link:hover::before {
+        width: 400px;
+        height: 400px;
+    }
+
+    .contact-link span, .contact-link i {
+        position: relative;
+        z-index: 1;
+    }
+
+    .whatsapp-link {
+        background: #25D366;
+        color: #ffffff;
+    }
+
+    .whatsapp-link:hover {
+        background: #20BA5A;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+    }
+
+    .discord-link {
+        background: #5865F2;
+        color: #ffffff;
+    }
+
+    .discord-link:hover {
+        background: #4752C4;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(88, 101, 242, 0.5);
+    }
+
+    /* Info Section with Premium Borders */
+    .info-section {
+        padding: 3.5rem 3rem;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .info-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-2);
+    }
+
+    .info-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-2);
+    }
+
+    /* Corner decorations for info section */
+    .info-corner {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        border: 2px solid var(--accent);
+        opacity: 0.2;
+    }
+
+    .info-corner.top-left {
+        top: 0;
+        left: 0;
+        border-right: none;
+        border-bottom: none;
+    }
+
+    .info-corner.top-right {
+        top: 0;
+        right: 0;
+        border-left: none;
+        border-bottom: none;
+    }
+
+    .info-corner.bottom-left {
+        bottom: 0;
+        left: 0;
+        border-right: none;
+        border-top: none;
+    }
+
+    .info-corner.bottom-right {
+        bottom: 0;
+        right: 0;
+        border-left: none;
+        border-top: none;
+    }
+
+    .info-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(33, 242, 255, 0.1);
+        border: 2px solid var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 2rem;
+        position: relative;
+        animation: infoIconPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes infoIconPulse {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(33, 242, 255, 0.4);
+        }
+        50% {
+            box-shadow: 0 0 0 20px rgba(33, 242, 255, 0);
+        }
+    }
+
+    .info-icon i {
+        font-size: 2.2rem;
+        color: var(--accent);
+    }
+
+    .info-section h3 {
+        font-size: 2rem;
+        color: var(--text-primary);
+        margin-bottom: 1.2rem;
+        position: relative;
+        z-index: 1;
+        font-weight: 700;
+    }
+
+    .info-section > p {
+        color: var(--text-secondary);
+        line-height: 1.8;
+        font-size: 1rem;
+        max-width: 800px;
+        margin: 0 auto 3rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .features-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+        gap: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .feature-box {
+        padding: 2rem;
+        background: var(--bg-secondary);
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, transparent 0%, rgba(33, 242, 255, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .feature-box:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent);
+        box-shadow: 0 15px 40px rgba(33, 242, 255, 0.25);
+    }
+
+    .feature-box:hover::before {
+        opacity: 1;
+    }
+
+    .feature-box i {
+        font-size: 2rem;
+        color: var(--accent);
+        margin-bottom: 1.2rem;
+        display: block;
+        position: relative;
+        z-index: 1;
+        transition: transform 0.3s;
+    }
+
+    .feature-box:hover i {
+        transform: scale(1.2) rotate(5deg);
+    }
+
+    .feature-box h4 {
+        color: var(--text-primary);
+        margin-bottom: 0.6rem;
+        font-size: 1.15rem;
+        position: relative;
+        z-index: 1;
+        font-weight: 600;
+    }
+
+    .feature-box p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.7;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Tablet Responsive */
+    @media (max-width: 1024px) {
+        .contact-container {
+            padding: 0 1.5rem 4rem;
+            margin-top: -3rem;
+        }
+
+        .contact-grid {
+            gap: 2rem;
+        }
+
+        .features-list {
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+            gap: 1.5rem;
+        }
+    }
+
+    /* Mobile Landscape & Tablet Portrait */
+    @media (max-width: 768px) {
+        .contact-hero {
+            min-height: 55vh;
+            padding: 2.5rem 1.2rem;
+        }
+
+        .contact-hero h1 {
+            font-size: 2.2rem;
+        }
+
+        .contact-hero p {
+            font-size: 1rem;
+        }
+
+        .hero-icon-badge {
+            width: 75px;
+            height: 75px;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-icon-badge i {
+            font-size: 2.2rem;
+        }
+
+        .contact-container {
+            padding: 0 1.2rem 3.5rem;
+            margin-top: -2.5rem;
+        }
+
+        .contact-grid {
+            grid-template-columns: 1fr;
+            gap: 1.8rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-card {
+            padding: 2.2rem 1.8rem;
+        }
+
+        .contact-card h2 {
+            font-size: 1.5rem;
+        }
+
+        .contact-card p {
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon-wrapper {
+            width: 65px;
+            height: 65px;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+        }
+
+        .info-section {
+            padding: 2.5rem 1.8rem;
+        }
+
+        .info-section h3 {
+            font-size: 1.7rem;
+        }
+
+        .info-section > p {
+            font-size: 0.95rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .info-icon {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-icon i {
+            font-size: 1.9rem;
+        }
+
+        .features-list {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .feature-box {
+            padding: 1.8rem 1.5rem;
+        }
+
+        .info-corner {
+            width: 50px;
+            height: 50px;
+        }
+    }
+
+    /* Small Mobile Devices */
+    @media (max-width: 480px) {
+        .contact-hero {
+            min-height: 50vh;
+            padding: 2rem 1rem;
+        }
+
+        .contact-hero h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .contact-hero p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .hero-icon-badge {
+            width: 65px;
+            height: 65px;
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-icon-badge i {
+            font-size: 1.9rem;
+        }
+
+        .contact-container {
+            padding: 0 1rem 3rem;
+            margin-top: -2rem;
+        }
+
+        .contact-grid {
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .contact-card {
+            padding: 2rem 1.5rem;
+            border-radius: 14px;
+        }
+
+        .contact-card h2 {
+            font-size: 1.35rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .contact-card p {
+            font-size: 0.9rem;
+            margin-bottom: 1.3rem;
+            line-height: 1.7;
+        }
+
+        .contact-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1.2rem;
+            border-radius: 12px;
+        }
+
+        .contact-icon {
+            font-size: 1.8rem;
+        }
+
+        .contact-link {
+            padding: 0.9rem 1.5rem;
+            font-size: 0.95rem;
+            gap: 10px;
+            border-radius: 10px;
+        }
+
+        .info-section {
+            padding: 2rem 1.2rem;
+            border-radius: 14px;
+        }
+
+        .info-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-section > p {
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1.2rem;
+        }
+
+        .info-icon i {
+            font-size: 1.7rem;
+        }
+
+        .features-list {
+            gap: 1.2rem;
+        }
+
+        .feature-box {
+            padding: 1.5rem 1.2rem;
+            border-radius: 12px;
+        }
+
+        .feature-box i {
+            font-size: 1.7rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-box h4 {
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-box p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .info-corner {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* Hide animated elements on small screens for better performance */
+        .pulse-circle,
+        .wave-line {
+            display: none;
+        }
+    }
+
+    /* Extra Small Devices */
+    @media (max-width: 360px) {
+        .contact-hero {
+            padding: 1.5rem 0.8rem;
+        }
+
+        .contact-hero h1 {
+            font-size: 1.6rem;
+        }
+
+        .hero-icon-badge {
+            width: 55px;
+            height: 55px;
+        }
+
+        .hero-icon-badge i {
+            font-size: 1.6rem;
+        }
+
+        .contact-container {
+            padding: 0 0.8rem 2.5rem;
+        }
+
+        .contact-card {
+            padding: 1.5rem 1.2rem;
+        }
+
+        .contact-card h2 {
+            font-size: 1.25rem;
+        }
+
+        .info-section {
+            padding: 1.5rem 1rem;
+        }
+
+        .info-section h3 {
+            font-size: 1.35rem;
+        }
+
+        .feature-box {
+            padding: 1.3rem 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="contact-hero fade-in">
+    <div class="contact-animated-bg">
+        <div class="grid-overlay"></div>
+        <div class="pulse-circle" style="top: 20%; left: 30%; width: 100px; height: 100px; animation-delay: 0s;"></div>
+        <div class="pulse-circle" style="top: 60%; right: 20%; width: 150px; height: 150px; animation-delay: 2s;"></div>
+        <div class="wave-line" style="top: 30%; animation-delay: 0s;"></div>
+        <div class="wave-line" style="top: 70%; animation-delay: 3s;"></div>
+    </div>
+
+    <div class="hero-content-wrapper">
+        <div class="hero-icon-badge">
+            <i class="fa-solid fa-comments"></i>
+        </div>
+        <h1>Get In Touch</h1>
+        <p>Join our thriving community and connect with thousands of users. Get instant support, share experiences, and stay updated with the latest V2Ray configurations.</p>
+    </div>
+</section>
+
+<div class="contact-container">
+    <div class="contact-grid">
+        <div class="contact-card slide-in-left">
+            <div class="contact-icon-wrapper">
+                <i class="fa-brands fa-whatsapp contact-icon"></i>
+            </div>
+            <h2>WhatsApp Community</h2>
+            <p>Join our active WhatsApp group for instant updates, real-time support, and exclusive V2Ray configurations. Connect with fellow users and get your questions answered quickly.</p>
+            <a href="https://chat.whatsapp.com/Hre9DcY71UvC32oMVwwUrE" target="_blank" class="contact-link whatsapp-link">
+                <i class="fa-brands fa-whatsapp"></i>
+                <span>Join WhatsApp Group</span>
+            </a>
+        </div>
+
+        <div class="contact-card slide-in-right">
+            <div class="contact-icon-wrapper">
+                <i class="fa-brands fa-discord contact-icon"></i>
+            </div>
+            <h2>Discord Server</h2>
+            <p>Be part of our Discord community with organized channels, helpful moderators, and a wealth of resources. Engage in discussions, get technical help, and access exclusive content.</p>
+            <a href="https://discord.gg/DhPZ8uMv4v" target="_blank" class="contact-link discord-link">
+                <i class="fa-brands fa-discord"></i>
+                <span>Join Discord Server</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="info-section fade-in">
+        <div class="info-corner top-left"></div>
+        <div class="info-corner top-right"></div>
+        <div class="info-corner bottom-left"></div>
+        <div class="info-corner bottom-right"></div>
+
+        <div class="info-icon">
+            <i class="fa-solid fa-circle-info"></i>
+        </div>
+        <h3>Why Join Our Community?</h3>
+        <p>We're more than just a V2Ray service provider. Our community is built on support, transparency, and shared knowledge. Whether you're a beginner or an expert, you'll find valuable resources and friendly people ready to help.</p>
+
+        <div class="features-list">
+            <div class="feature-box">
+                <i class="fa-solid fa-bolt"></i>
+                <h4>Instant Support</h4>
+                <p>Get help within minutes from our active community members and support team.</p>
+            </div>
+
+            <div class="feature-box">
+                <i class="fa-solid fa-bell"></i>
+                <h4>Real-Time Updates</h4>
+                <p>Be the first to know about new configurations, updates, and service announcements.</p>
+            </div>
+
+            <div class="feature-box">
+                <i class="fa-solid fa-users"></i>
+                <h4>Active Community</h4>
+                <p>Connect with thousands of users sharing tips, tricks, and experiences.</p>
+            </div>
+
+            <div class="feature-box">
+                <i class="fa-solid fa-crown"></i>
+                <h4>Exclusive Access</h4>
+                <p>Community members get early access to new features and premium configurations.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

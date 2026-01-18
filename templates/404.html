@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found | NetZone{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 200px);
+        padding: 2rem 1rem;
+        text-align: center;
+    }
+
+    .error-code {
+        font-size: 7rem;
+        font-weight: bold;
+        color: var(--accent);
+        line-height: 1;
+        margin-bottom: 0.8rem;
+        text-shadow: 0 0 30px rgba(33, 242, 255, 0.5);
+        animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+        0%, 100% {
+            text-shadow: 0 0 30px rgba(33, 242, 255, 0.5);
+        }
+        50% {
+            text-shadow: 0 0 50px rgba(33, 242, 255, 0.8);
+        }
+    }
+
+    .error-title {
+        font-size: 2rem;
+        color: var(--text-primary);
+        margin-bottom: 0.8rem;
+    }
+
+    .error-message {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        max-width: 550px;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+    }
+
+    .error-icon {
+        font-size: 4rem;
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    .error-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 0.9rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary {
+        background: var(--accent);
+        color: var(--bg-primary);
+    }
+
+    .btn-primary:hover {
+        background: #00a8b8;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--accent-glow);
+    }
+
+    .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .error-code {
+            font-size: 5rem;
+        }
+
+        .error-title {
+            font-size: 1.6rem;
+        }
+
+        .error-message {
+            font-size: 0.9rem;
+        }
+
+        .error-actions {
+            flex-direction: column;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .error-container {
+            padding: 1.5rem 0.8rem;
+        }
+
+        .error-code {
+            font-size: 4rem;
+        }
+
+        .error-title {
+            font-size: 1.4rem;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="error-container fade-in">
+    <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+    <div class="error-code">404</div>
+    <h1 class="error-title">Page Not Found</h1>
+    <p class="error-message">
+        Oops! The page you're looking for seems to have vanished into the digital void.
+        Don't worry, you can navigate back to safety using the buttons below.
+    </p>
+    <div class="error-actions">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            <i class="fas fa-home"></i> Go Home
+        </a>
+        <a href="{{ url_for('contact') }}" class="btn btn-secondary">
+            <i class="fas fa-envelope"></i> Contact Us
+        </a>
+    </div>
+</div>
+{% endblock %}
