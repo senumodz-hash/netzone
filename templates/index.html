@@ -1,98 +1,1387 @@
 {% extends "base.html" %}
 
-{% block title %}Home - NetZone{% endblock %}
-
 {% block extra_css %}
 <style>
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2rem;
-    margin: 2rem;
-}
-.card {
-    background: var(--bg-card, #111);
-    color: var(--text-primary, #fff);
-    border-radius: 16px;
-    padding: 1.5rem;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(33, 242, 255, 0.25);
-}
-.card img {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-    margin-bottom: 1rem;
-}
-.card h3 {
-    margin-bottom: 0.5rem;
-}
-.card a {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.6rem 1.2rem;
-    background: var(--accent, #21f2ff);
-    color: #000;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-}
-.card a:hover {
-    background: #00a8b8;
-}
+    /* Hero Section */
+    .hero {
+        position: relative;
+        min-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--bg-primary);
+        padding: 2rem 1rem;
+    }
+
+    .animated-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+        opacity: 0.6;
+    }
+
+    .grid-line {
+        position: absolute;
+        background: var(--accent);
+        opacity: 0.08;
+    }
+
+    .grid-line.horizontal {
+        width: 100%;
+        height: 1px;
+        animation: slideRight 15s linear infinite;
+    }
+
+    .grid-line.vertical {
+        width: 1px;
+        height: 100%;
+        animation: slideDown 20s linear infinite;
+    }
+
+    @keyframes slideRight {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(100%); }
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(100%); }
+    }
+
+    .floating-particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: var(--accent);
+        border-radius: 50%;
+        opacity: 0.4;
+        animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(50px, -50px); }
+        50% { transform: translate(-30px, -80px); }
+        75% { transform: translate(30px, -40px); }
+    }
+
+    /* Animated circuit lines */
+    .circuit-line {
+        position: absolute;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        opacity: 0.15;
+    }
+
+    .circuit-h {
+        height: 2px;
+        width: 200px;
+        animation: pulseHorizontal 6s ease-in-out infinite;
+    }
+
+    .circuit-v {
+        width: 2px;
+        height: 200px;
+        animation: pulseVertical 6s ease-in-out infinite;
+    }
+
+    @keyframes pulseHorizontal {
+        0%, 100% {
+            opacity: 0.1;
+            transform: translateX(0) scaleX(1);
+        }
+        50% {
+            opacity: 0.3;
+            transform: translateX(20px) scaleX(1.2);
+        }
+    }
+
+    @keyframes pulseVertical {
+        0%, 100% {
+            opacity: 0.1;
+            transform: translateY(0) scaleY(1);
+        }
+        50% {
+            opacity: 0.3;
+            transform: translateY(20px) scaleY(1.2);
+        }
+    }
+
+    /* Hexagon pattern */
+    .hex-pattern {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        opacity: 0.08;
+        animation: rotateHex 20s linear infinite;
+    }
+
+    @keyframes rotateHex {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .hex-pattern::before,
+    .hex-pattern::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: 2px solid var(--accent);
+        border-radius: 10px;
+    }
+
+    .hex-pattern::before {
+        transform: rotate(60deg);
+    }
+
+    .hex-pattern::after {
+        transform: rotate(-60deg);
+    }
+
+    /* Glowing orbs */
+    .glow-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(40px);
+        opacity: 0.15;
+        animation: moveOrb 15s ease-in-out infinite;
+    }
+
+    @keyframes moveOrb {
+        0%, 100% {
+            transform: translate(0, 0) scale(1);
+        }
+        33% {
+            transform: translate(100px, -50px) scale(1.2);
+        }
+        66% {
+            transform: translate(-50px, 100px) scale(0.8);
+        }
+    }
+
+    /* Data stream effect */
+    .data-stream {
+        position: absolute;
+        width: 2px;
+        height: 60px;
+        background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+        opacity: 0.2;
+        animation: dataFlow 3s linear infinite;
+    }
+
+    @keyframes dataFlow {
+        from {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        50% {
+            opacity: 0.3;
+        }
+        to {
+            transform: translateY(100vh);
+            opacity: 0;
+        }
+    }
+
+    /* Scanning line */
+    .scan-line {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent) 50%, transparent);
+        opacity: 0.2;
+        animation: scan 8s ease-in-out infinite;
+        box-shadow: 0 0 20px var(--accent);
+    }
+
+    @keyframes scan {
+        0%, 100% {
+            transform: translateY(0);
+            opacity: 0;
+        }
+        10%, 90% {
+            opacity: 0.3;
+        }
+        50% {
+            transform: translateY(90vh);
+            opacity: 0.3;
+        }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        max-width: 800px;
+        padding: 1rem;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        padding: 0.4rem 1.2rem;
+        background: rgba(33, 242, 255, 0.1);
+        border: 1px solid var(--accent);
+        border-radius: 50px;
+        color: var(--accent);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-bottom: 1.5rem;
+        text-transform: uppercase;
+    }
+
+    .hero h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1.2rem;
+        background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-subtitle {
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.7;
+    }
+
+    .hero-cta {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 2.5rem;
+    }
+
+    .btn {
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        border: none;
+    }
+
+    .btn-primary {
+        background: var(--accent);
+        color: var(--bg-primary);
+        box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 30px var(--accent-glow);
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--accent);
+        border: 2px solid var(--accent);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(33, 242, 255, 0.1);
+        transform: translateY(-3px);
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--accent);
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    /* V2Ray Selection Section */
+    .v2ray-section {
+        padding: 4rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        color: var(--text-primary);
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .v2ray-selector-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .selector-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .selector-header h3 {
+        font-size: 1.5rem;
+        color: var(--accent);
+        margin-bottom: 0.4rem;
+    }
+
+    .search-box {
+        position: relative;
+        margin-bottom: 1.2rem;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 0.9rem 0.9rem 0.9rem 2.8rem;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent);
+        font-size: 1rem;
+    }
+
+    .dropdown-list {
+        max-height: 400px;
+        overflow-y: auto;
+        border-radius: 10px;
+        background: var(--bg-secondary);
+    }
+
+    .dropdown-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .dropdown-list::-webkit-scrollbar-track {
+        background: var(--bg-primary);
+        border-radius: 3px;
+    }
+
+    .dropdown-list::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 3px;
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .dropdown-item:hover {
+        background: var(--bg-card);
+        padding-left: 1.3rem;
+    }
+
+    .dropdown-item img {
+        width: 45px;
+        height: 45px;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+
+    .dropdown-item-text {
+        flex: 1;
+    }
+
+    .dropdown-item-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.1rem;
+    }
+
+    .dropdown-item-desc {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    .v2ray-output {
+        margin-top: 1.5rem;
+        display: none;
+    }
+
+    .v2ray-output.active {
+        display: block;
+        animation: fadeInUp 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .v2ray-config-box {
+        background: var(--bg-primary);
+        border: 2px solid var(--accent);
+        border-radius: 10px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .config-label {
+        color: var(--accent);
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .config-text {
+        font-family: 'Courier New', monospace;
+        color: var(--text-secondary);
+        word-break: break-all;
+        line-height: 1.5;
+        font-size: 0.85rem;
+    }
+
+    .copy-button {
+        width: 100%;
+        padding: 0.9rem;
+        background: var(--accent);
+        color: var(--bg-primary);
+        border: none;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .copy-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px var(--accent-glow);
+    }
+
+    .copy-button:active {
+        transform: scale(0.98);
+    }
+
+    /* Premium Service Section */
+    .premium-section {
+        padding: 4rem 1.5rem;
+        background: var(--gradient-1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .premium-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .premium-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    /* Decorative corner elements */
+    .premium-section .corner-decoration {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        border: 2px solid var(--accent);
+        opacity: 0.15;
+    }
+
+    .premium-section .corner-top-left {
+        top: 0;
+        left: 0;
+        border-right: none;
+        border-bottom: none;
+        border-radius: 0;
+    }
+
+    .premium-section .corner-top-right {
+        top: 0;
+        right: 0;
+        border-left: none;
+        border-bottom: none;
+        border-radius: 0;
+    }
+
+    .premium-section .corner-bottom-left {
+        bottom: 0;
+        left: 0;
+        border-right: none;
+        border-top: none;
+        border-radius: 0;
+    }
+
+    .premium-section .corner-bottom-right {
+        bottom: 0;
+        right: 0;
+        border-left: none;
+        border-top: none;
+        border-radius: 0;
+    }
+
+    /* Animated border pattern */
+    .premium-border-animation {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .border-line {
+        position: absolute;
+        background: var(--accent);
+        opacity: 0;
+        animation: borderPulse 4s ease-in-out infinite;
+    }
+
+    .border-line.top {
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        animation: borderSlideRight 3s ease-in-out infinite;
+    }
+
+    .border-line.right {
+        top: 0;
+        right: 0;
+        width: 2px;
+        height: 0;
+        animation: borderSlideDown 3s ease-in-out infinite 0.75s;
+    }
+
+    .border-line.bottom {
+        bottom: 0;
+        right: 0;
+        width: 0;
+        height: 2px;
+        animation: borderSlideLeft 3s ease-in-out infinite 1.5s;
+    }
+
+    .border-line.left {
+        bottom: 0;
+        left: 0;
+        width: 2px;
+        height: 0;
+        animation: borderSlideUp 3s ease-in-out infinite 2.25s;
+    }
+
+    @keyframes borderSlideRight {
+        0%, 100% { width: 0; opacity: 0; }
+        50% { width: 100%; opacity: 0.3; }
+    }
+
+    @keyframes borderSlideDown {
+        0%, 100% { height: 0; opacity: 0; }
+        50% { height: 100%; opacity: 0.3; }
+    }
+
+    @keyframes borderSlideLeft {
+        0%, 100% { width: 0; opacity: 0; }
+        50% { width: 100%; opacity: 0.3; }
+    }
+
+    @keyframes borderSlideUp {
+        0%, 100% { height: 0; opacity: 0; }
+        50% { height: 100%; opacity: 0.3; }
+    }
+
+    /* Section divider with animated dots */
+    .section-divider {
+        position: absolute;
+        bottom: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+    }
+
+    .divider-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        opacity: 0.5;
+        animation: dotPulse 2s ease-in-out infinite;
+    }
+
+    .divider-dot:nth-child(2) {
+        animation-delay: 0.3s;
+    }
+
+    .divider-dot:nth-child(3) {
+        animation-delay: 0.6s;
+    }
+
+    @keyframes dotPulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.5;
+        }
+        50% {
+            transform: scale(1.5);
+            opacity: 1;
+            box-shadow: 0 0 20px var(--accent);
+        }
+    }
+
+    .premium-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .premium-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .premium-card::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: var(--gradient-2);
+        border-radius: 16px;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    .premium-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .premium-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0.5rem 1.2rem;
+        background: rgba(33, 242, 255, 0.1);
+        border: 1px solid var(--accent);
+        border-radius: 50px;
+        color: var(--accent);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+    }
+
+    .premium-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+        background: var(--gradient-2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .premium-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-bottom: 2.5rem;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+
+    .feature-icon {
+        width: 45px;
+        height: 45px;
+        background: rgba(33, 242, 255, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .feature-text h4 {
+        font-size: 1rem;
+        color: var(--text-primary);
+        margin-bottom: 0.2rem;
+    }
+
+    .feature-text p {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    /* Apps Section */
+    .apps-section {
+        padding: 4rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .apps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2.5rem;
+    }
+
+    .app-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.8rem;
+        text-align: center;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .app-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-2);
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+    }
+
+    .app-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent);
+        box-shadow: 0 10px 40px rgba(33, 242, 255, 0.2);
+    }
+
+    .app-card:hover::before {
+        transform: translateX(0);
+    }
+
+    .app-icon {
+        width: 70px;
+        height: 70px;
+        object-fit: contain;
+        margin: 0 auto 1.2rem;
+        filter: drop-shadow(0 4px 10px rgba(33, 242, 255, 0.2));
+    }
+
+    .app-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.4rem;
+    }
+
+    .app-platform {
+        display: inline-block;
+        padding: 0.25rem 0.8rem;
+        background: rgba(33, 242, 255, 0.1);
+        border-radius: 20px;
+        color: var(--accent);
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+    }
+
+    .download-btn {
+        width: 100%;
+        padding: 0.8rem;
+        background: var(--accent);
+        color: var(--bg-primary);
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.3s;
+    }
+
+    .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px var(--accent-glow);
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+        .hero {
+            min-height: 85vh;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 0.95rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+        }
+
+        .v2ray-selector-container {
+            padding: 1.5rem;
+        }
+
+        .premium-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .premium-title {
+            font-size: 1.7rem;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+
+        /* Reduce animations on smaller screens */
+        .hex-pattern,
+        .glow-orb {
+            display: none;
+        }
+
+        .corner-decoration {
+            width: 80px;
+            height: 80px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 {
+            font-size: 1.9rem;
+        }
+
+        .stats {
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+        }
+
+        .apps-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        /* Hide more decorative elements */
+        .circuit-line,
+        .data-stream {
+            display: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .hero {
+            min-height: 80vh;
+            padding: 1rem 0.5rem;
+        }
+
+        .hero h1 {
+            font-size: 1.6rem;
+        }
+
+        .hero-subtitle {
+            font-size: 0.9rem;
+        }
+
+        .hero-cta {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .v2ray-selector-container {
+            padding: 1.2rem;
+        }
+
+        .apps-grid {
+            grid-template-columns: 1fr;
+        }
+
+        /* Simplify animations further */
+        .corner-decoration {
+            display: none;
+        }
+
+        .floating-particle {
+            width: 2px;
+            height: 2px;
+        }
+
+        .scan-line {
+            display: none;
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<h1 style="text-align:center; margin-top:2rem;">Our Apps</h1>
-<div class="card-container" id="apps-container"></div>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="animated-bg">
+        <!-- Grid Lines -->
+        <div class="grid-line horizontal" style="top: 20%;"></div>
+        <div class="grid-line horizontal" style="top: 50%;"></div>
+        <div class="grid-line horizontal" style="top: 80%;"></div>
+        <div class="grid-line vertical" style="left: 20%;"></div>
+        <div class="grid-line vertical" style="left: 50%;"></div>
+        <div class="grid-line vertical" style="left: 80%;"></div>
 
-<h1 style="text-align:center; margin-top:4rem;">Free V2Ray Configurations</h1>
-<div class="card-container" id="v2ray-container"></div>
+        <!-- Floating Particles -->
+        <div class="floating-particle" style="top: 10%; left: 15%; animation-delay: 0s;"></div>
+        <div class="floating-particle" style="top: 60%; left: 80%; animation-delay: 2s;"></div>
+        <div class="floating-particle" style="top: 80%; left: 30%; animation-delay: 4s;"></div>
+        <div class="floating-particle" style="top: 30%; left: 70%; animation-delay: 1s;"></div>
+        <div class="floating-particle" style="top: 50%; left: 20%; animation-delay: 3s;"></div>
+        <div class="floating-particle" style="top: 25%; left: 45%; animation-delay: 1.5s;"></div>
+        <div class="floating-particle" style="top: 70%; left: 60%; animation-delay: 2.5s;"></div>
+
+        <!-- Circuit Lines -->
+        <div class="circuit-line circuit-h" style="top: 15%; left: 10%; animation-delay: 0s;"></div>
+        <div class="circuit-line circuit-h" style="top: 45%; right: 15%; animation-delay: 1s;"></div>
+        <div class="circuit-line circuit-h" style="top: 75%; left: 25%; animation-delay: 2s;"></div>
+        <div class="circuit-line circuit-v" style="top: 20%; left: 30%; animation-delay: 0.5s;"></div>
+        <div class="circuit-line circuit-v" style="top: 40%; right: 20%; animation-delay: 1.5s;"></div>
+        <div class="circuit-line circuit-v" style="bottom: 10%; left: 70%; animation-delay: 2.5s;"></div>
+
+        <!-- Hexagon Patterns -->
+        <div class="hex-pattern" style="top: 10%; left: 5%;"></div>
+        <div class="hex-pattern" style="top: 50%; right: 10%; animation-delay: 5s;"></div>
+        <div class="hex-pattern" style="bottom: 15%; left: 40%; animation-delay: 10s;"></div>
+
+        <!-- Glowing Orbs -->
+        <div class="glow-orb" style="top: 20%; left: 10%; width: 200px; height: 200px; background: var(--accent); animation-delay: 0s;"></div>
+        <div class="glow-orb" style="top: 60%; right: 15%; width: 150px; height: 150px; background: var(--accent); animation-delay: 5s;"></div>
+        <div class="glow-orb" style="bottom: 10%; left: 50%; width: 180px; height: 180px; background: var(--accent); animation-delay: 10s;"></div>
+
+        <!-- Data Streams -->
+        <div class="data-stream" style="left: 20%; animation-delay: 0s;"></div>
+        <div class="data-stream" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="data-stream" style="left: 60%; animation-delay: 2s;"></div>
+        <div class="data-stream" style="left: 80%; animation-delay: 1.5s;"></div>
+
+        <!-- Scanning Line -->
+        <div class="scan-line"></div>
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-badge fade-in">NETZONE HOSTING™</div>
+        <h1 class="fade-in">Next-Gen V2Ray Infrastructure</h1>
+        <p class="hero-subtitle fade-in">The Future of Secure Internet Starts Here</p>
+        <p class="hero-subtitle fade-in" style="margin-top: -1.5rem;">Experience next-generation performance with our V2Ray platform. For the first time, we're offering full V2Ray coverage completely free — enjoy ultra-low-latency connections and enterprise-grade security at no cost.</p>
+
+        <div class="hero-cta fade-in">
+            <a href="#free-v2ray" class="btn btn-primary" onclick="scrollToSection('free-v2ray')">
+                <i class="fa-solid fa-rocket"></i> Explore Free V2Ray
+            </a>
+            <a href="{{ url_for('contact') }}" class="btn btn-secondary">
+                <i class="fa-solid fa-headset"></i> Get Support
+            </a>
+        </div>
+
+        <div class="stats fade-in">
+            <div class="stat-item">
+                <span class="stat-value">99.99%</span>
+                <span class="stat-label">Uptime SLA</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">100% Free</span>
+                <span class="stat-label">Paid Service Included</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">24/7</span>
+                <span class="stat-label">Expert Support</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- V2Ray Selection Section -->
+<section id="free-v2ray" class="v2ray-section">
+    <div class="section-header fade-in">
+        <h2 class="section-title">Free V2Ray Configurations</h2>
+        <p class="section-subtitle">Select from our curated list of high-performance V2Ray configs optimized for Sri Lankan ISPs</p>
+    </div>
+
+    <div class="v2ray-selector-container slide-in-left">
+        <div class="selector-header">
+            <h3>Choose Your Configuration</h3>
+            <p style="color: var(--text-secondary); margin-top: 0.3rem; font-size: 0.9rem;">Search or browse available configs</p>
+        </div>
+
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search for V2Ray config (e.g., Dialog, SLT, Mobitel...)">
+        </div>
+
+        <div class="dropdown-list" id="dropdownList">
+            <!-- Items will be loaded here -->
+        </div>
+
+        <div class="v2ray-output" id="v2rayOutput">
+            <div class="v2ray-config-box">
+                <div class="config-label">Selected Configuration</div>
+                <div class="config-text" id="configText"></div>
+            </div>
+            <button class="copy-button" onclick="copyConfig()">
+                <i class="fa-solid fa-copy"></i> Copy Configuration
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Premium Service Section -->
+<section class="premium-section slide-in-right">
+    <!-- Animated Border Pattern -->
+    <div class="premium-border-animation">
+        <div class="border-line top"></div>
+        <div class="border-line right"></div>
+        <div class="border-line bottom"></div>
+        <div class="border-line left"></div>
+    </div>
+
+    <!-- Corner Decorations -->
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+
+    <div class="premium-container">
+        <div class="premium-card">
+            <div class="premium-content">
+                <div class="premium-badge">
+                    <i class="fa-solid fa-crown"></i> PREMIUM SERVICE
+                </div>
+                <h2 class="premium-title">DIGITAL OCEAN V2Ray</h2>
+                <p class="premium-subtitle">Enterprise-Grade Performance & Security</p>
+
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Singapore Servers</h4>
+                            <p>Premium DigitalOcean infrastructure located in Singapore for optimal performance across Asia</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Ultra-Low Latency</h4>
+                            <p>Experience blazing-fast speeds with our optimized Netch connection protocol</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Maximum Security</h4>
+                            <p>Military-grade encryption and secure tunneling for complete privacy protection</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-gauge-high"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Stable Performance</h4>
+                            <p>99.99% uptime guarantee with automatic failover and load balancing</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Priority Support</h4>
+                            <p>24/7 dedicated support team ready to assist with any technical issues</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Auto Updates</h4>
+                            <p>Automatic configuration updates and optimization without any downtime</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="/contact" class="btn btn-primary" style="margin-top: 2rem; display: inline-flex;">
+                    <i class="fa-solid fa-shopping-cart"></i> Contact to Purchase
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Divider -->
+    <div class="section-divider">
+        <div class="divider-dot"></div>
+        <div class="divider-dot"></div>
+        <div class="divider-dot"></div>
+    </div>
+</section>
+
+<!-- Apps Section -->
+<section id="apps" class="apps-section">
+    <div class="section-header fade-in">
+        <h2 class="section-title">Supported Applications</h2>
+        <p class="section-subtitle">Download the best V2Ray clients for your platform</p>
+    </div>
+
+    <div class="apps-grid" id="appsGrid">
+        <!-- Apps will be loaded here -->
+    </div>
+</section>
 
 <script>
-async function loadApps() {
-    const res = await fetch('/api/apps');
-    const data = await res.json();
-    const container = document.getElementById('apps-container');
-    data.data.apps.forEach(app => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-            <img src="/static/images/${app.icon.split('/').pop()}" alt="${app.name}">
-            <h3>${app.name}</h3>
-            <p>${app.platform}</p>
-            <a href="${app.url}" target="_blank">Download</a>
-        `;
-        container.appendChild(card);
+    let v2rayConfigs = [];
+    let selectedConfig = null;
+
+    // Load V2Ray configs
+    async function loadV2Rays() {
+        try {
+            const response = await fetch('{{ url_for("static", filename="data/free_v2rays.json") }}');
+            const data = await response.json();
+            v2rayConfigs = data.vpn_configs;
+            displayConfigs(v2rayConfigs);
+        } catch (error) {
+            console.error('Error loading V2Ray configs:', error);
+            document.getElementById('dropdownList').innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Failed to load configurations. Please refresh the page.</div>';
+        }
+    }
+
+    // Display configs
+    function displayConfigs(configs) {
+        const dropdown = document.getElementById('dropdownList');
+
+        if (configs.length === 0) {
+            dropdown.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">No configurations found matching your search.</div>';
+            return;
+        }
+
+        dropdown.innerHTML = configs.map(config => `
+            <div class="dropdown-item" onclick='selectConfig(${JSON.stringify(config).replace(/'/g, "&#39;")})'>
+                <img src="{{ url_for('static', filename='') }}${config.icon}" alt="${config.name}" onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'">
+                <div class="dropdown-item-text">
+                    <div class="dropdown-item-name">${config.name}</div>
+                    <div class="dropdown-item-desc">Click to select and copy configuration</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filtered = v2rayConfigs.filter(config =>
+                    config.name.toLowerCase().includes(searchTerm)
+                );
+                displayConfigs(filtered);
+            });
+        }
     });
-}
 
-async function loadV2Rays() {
-    const public_key = "NZ_PUB_7f9a2e8c4b6d1a5f3e0c9b7a4d2f8e1c";
-    const secret_key = "NZ_SEC_082cdb8785c84b229f694359d95b07d6";
+    // Select config
+    function selectConfig(config) {
+        selectedConfig = config.v2ray;
+        document.getElementById('configText').textContent = selectedConfig;
+        document.getElementById('v2rayOutput').classList.add('active');
 
-    const res = await fetch(`/api/v2rays?public_key=${public_key}&secret_key=${secret_key}`);
-    const data = await res.json();
-    const container = document.getElementById('v2ray-container');
+        // Scroll to output
+        document.getElementById('v2rayOutput').scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+        });
+    }
 
-    data.data.vpn_configs.forEach(vpn => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-            <img src="/static/images/${vpn.icon.split('/').pop()}" alt="${vpn.name}">
-            <h3>${vpn.name}</h3>
-            <a href="${vpn.v2ray}" target="_blank">Copy Config</a>
-        `;
-        container.appendChild(card);
+    // Copy config
+    function copyConfig() {
+        if (selectedConfig) {
+            navigator.clipboard.writeText(selectedConfig).then(() => {
+                const btn = document.querySelector('.copy-button');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied Successfully!';
+                btn.style.background = '#00d47e';
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                }, 2500);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy. Please try again.');
+            });
+        }
+    }
+
+    // Load apps
+    async function loadApps() {
+        try {
+            const response = await fetch('{{ url_for("static", filename="data/apps.json") }}');
+            const data = await response.json();
+            const appsGrid = document.getElementById('appsGrid');
+
+            appsGrid.innerHTML = data.apps.map(app => `
+                <div class="app-card fade-in">
+                    <img src="{{ url_for('static', filename='') }}${app.icon}" alt="${app.name}" class="app-icon" onerror="this.src='{{ url_for('static', filename='images/logo.png') }}'">
+                    <div class="app-name">${app.name}</div>
+                    <div class="app-platform">${app.platform}</div>
+                    <a href="${app.url}" target="_blank" class="download-btn">
+                        <i class="fa-solid fa-download"></i> Download
+                    </a>
+                </div>
+            `).join('');
+
+            // Re-observe new elements
+            const newElements = appsGrid.querySelectorAll('.fade-in');
+            newElements.forEach(el => {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                observer.observe(el);
+            });
+        } catch (error) {
+            console.error('Error loading apps:', error);
+            document.getElementById('appsGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 2rem; font-size: 0.9rem;">Failed to load applications. Please refresh the page.</div>';
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        loadV2Rays();
+        loadApps();
     });
-}
-
-loadApps();
-loadV2Rays();
 </script>
 {% endblock %}
